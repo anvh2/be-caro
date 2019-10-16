@@ -1,0 +1,12 @@
+{
+  "DB": {
+    "host": "remotemysql.com",
+    "port": 3306,
+    "user": "U5fJ5tUQfK",
+    "password": "QdwzKpPIcT",
+    "database": "U5fJ5tUQfK"
+  },
+  "Auth": {
+    "passphare": "blasters42Haiku40amerada"
+  }
+}
