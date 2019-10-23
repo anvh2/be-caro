@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var handler = require('./components/user/handler');
+var handlers = require('./components/user/handlers');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/me', function(req, res, next) {
-  handler.profile(req, res, next);
+  handlers.profile(req, res, next);
 });
 
 module.exports = router;

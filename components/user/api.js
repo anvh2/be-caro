@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var handler = require('./handler');
+var handlers = require('./handlers');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -8,11 +8,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-  handler.login(req, res, next);
+  handlers.login(req, res, next);
 });
 
 router.post('/register', function(req, res, next) {
-  handler.register(req, res, next);
+  handlers.register(req, res, next);
 });
 
 module.exports = router;

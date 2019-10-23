@@ -1,10 +1,17 @@
 {
-  "DB": {
+  "DB-Remote": {
     "host": "remotemysql.com",
     "port": 3306,
     "user": "GBZdsb7ire",
     "password": "NUER4Jz9y7",
     "database": "GBZdsb7ire"
+  },
+  "DB": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "root",
+    "password": "123",
+    "database": "db_caro"
   },
   "Auth": {
     "passphare": "blasters42Haiku40amerada"
