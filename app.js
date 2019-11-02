@@ -9,13 +9,24 @@ var passport = require('passport');
 require('dotenv').config();
 require('./middlewares/passport');
 var indexRouter = require('./index');
-var usersRouter = require('./components/user/api');
+var usersRouter = require('./components/user/interface');
+var gameRouter = require('./components/game/interface');
 
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+var socket = require('./plugins/socket');
+
+// start server
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});
 
 // use cors
-var whiteList = [''];
+var whiteList = ['http://localhost:3000'];
 var corsOption = {
+  credentials: true,
   origin: function(origin, callback) {
     if (whiteList.indexOf(origin) !== -1) {
       callback(null, true);
@@ -24,7 +35,7 @@ var corsOption = {
     }
   }
 };
-app.use(cors());
+app.use(cors(corsOption));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,8 +47,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// route setup
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
+app.use('/game', gameRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -55,10 +68,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
+// support socket
+socket.connect(io);
 
 module.exports = app;
