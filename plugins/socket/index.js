@@ -56,6 +56,7 @@ const socket = io => {
       // disconnect event
       socket.on('disconnect', () => {
         console.log(socket.id, 'is disconnected');
+        // listUser.delete()
       });
     });
   });
@@ -74,15 +75,17 @@ const newRoom = (io, player1, player2, room) => {
 
 // detect event client send message to it own room
 const detectMsg = (io, socket, room) => {
-  socket.on(`${room}`, data => {
-    console.log(data);
-    sendData(io, room, 'chat', data);
+  socket.on(`${room}`, res => {
+    console.log('data', res);
+    sendData(io, room, res.event, res.data);
   });
 };
 
 // sending to all clients in room, including sender
 const sendData = (io, room, event, data) => {
-  io.in(`${room}`).emit(`${event}`, `${data}`);
+  // marshal data
+  const dataStr = JSON.stringify(data);
+  io.in(`${room}`).emit(`${event}`, `${dataStr}`);
 };
 
 module.exports = {
