@@ -15,4 +15,8 @@ router.post('/register', function(req, res, next) {
   handlers.register(req, res, next);
 });
 
+router.post('update', function(req, res, next) {
+  handlers.update(req, res, next);
+});
+
 module.exports = router;

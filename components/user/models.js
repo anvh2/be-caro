@@ -14,5 +14,8 @@ module.exports = {
   },
   add: entity => {
     return db.add('user', entity);
+  },
+  update: entity => {
+    return db.update('user', 'id', entity);
   }
 };

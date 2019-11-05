@@ -8,7 +8,7 @@ const getRandomItem = list =>
 
 const socket = io => {
   io.on('connection', socket => {
-    socket.on('matching', (data, callback) => {
+    socket.on('MATCHING', (data, callback) => {
       if (listUser.has(data.username)) {
         callback({ code: -1, message: 'NO_NEED_RE_CONNECT' });
       } else {
@@ -35,8 +35,14 @@ const socket = io => {
 
             // broadcast to 2 client paired
             console.log(socket.id, enemy.id);
-            io.to(`${socket.id}`).emit('paired', { room: room });
-            io.to(`${enemy.id}`).emit('paired', { room: room });
+            io.to(`${socket.id}`).emit('PAIRING', {
+              room: room,
+              isYourTurn: false
+            });
+            io.to(`${enemy.id}`).emit('PAIRING', {
+              room: room,
+              isYourTurn: true
+            });
             counter -= 2;
 
             // set status paired
@@ -44,7 +50,7 @@ const socket = io => {
             // create new room for 2 players,
             // this room will listen all event from 2 players
             console.log('new room: ', room);
-            newRoom(io, socket, enemy.socket, room);
+            newRoom(socket, enemy.socket, room);
 
             break;
           }
@@ -63,29 +69,29 @@ const socket = io => {
 };
 
 // create new room
-const newRoom = (io, player1, player2, room) => {
+const newRoom = (player1, player2, room) => {
   // join room
   player1.join(`${room}`);
   player2.join(`${room}`);
 
   // detect message
-  detectMsg(io, player1, room);
-  detectMsg(io, player2, room);
+  detectMsg(player1, room);
+  detectMsg(player2, room);
 };
 
 // detect event client send message to it own room
-const detectMsg = (io, socket, room) => {
+const detectMsg = (socket, room) => {
   socket.on(`${room}`, res => {
     console.log('data', res);
-    sendData(io, room, res.event, res.data);
+    sendData(socket, room, res.event, res.data);
   });
 };
 
-// sending to all clients in room, including sender
-const sendData = (io, room, event, data) => {
+// sending to all clients in room, except sender
+const sendData = (socket, room, event, data) => {
   // marshal data
   const dataStr = JSON.stringify(data);
-  io.in(`${room}`).emit(`${event}`, `${dataStr}`);
+  socket.to(`${room}`).emit(`${event}`, `${dataStr}`);
 };
 
 module.exports = {

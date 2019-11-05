@@ -76,5 +76,41 @@ module.exports = {
         });
       }
     })(req, res);
+  },
+  update: (req, res, next) => {
+    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+      if (err) {
+        res.json({
+          code: -1,
+          message: err
+        });
+        if (info != undefined) {
+          res.json({
+            code: -1,
+            message: info.message
+          });
+        } else {
+          console.log(req.user);
+          models
+            .update(req.user)
+            .then(data => {
+              console.log(data);
+              res.status(200).json({
+                code: 1,
+                auth: true,
+                message: 'Ok'
+              });
+            })
+            .catch(err => {
+              console.log(err);
+              res.json({
+                code: -1,
+                auth: false,
+                message: 'Not ok'
+              });
+            });
+        }
+      }
+    });
   }
 };
