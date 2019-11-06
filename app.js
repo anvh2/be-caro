@@ -23,7 +23,7 @@ server.listen(PORT, () => {
 });
 
 // use cors
-var whiteList = ['http://localhost:3000'];
+var whiteList = ['http://localhost:3000/'];
 var corsOption = {
   credentials: true,
   origin: function(origin, callback) {
@@ -34,7 +34,7 @@ var corsOption = {
     }
   }
 };
-app.use(cors(corsOption));
+app.use(cors({ origin: 'http://localhost:3000' }));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
