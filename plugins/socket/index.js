@@ -89,6 +89,7 @@ const detectMsg = (socket, room) => {
 
 // sending to all clients in room, except sender
 const sendData = (socket, room, event, data) => {
+  console.log('event', event);
   // marshal data
   const dataStr = JSON.stringify(data);
   socket.to(`${room}`).emit(`${event}`, `${dataStr}`);

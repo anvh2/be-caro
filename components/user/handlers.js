@@ -16,7 +16,7 @@ module.exports = {
 
       req.login(user, { session: false }, err => {
         if (err) {
-          res.json({
+          return res.json({
             code: -1,
             message: err
           });
@@ -28,7 +28,12 @@ module.exports = {
           username: user[0].username
         };
         var token = jwt.sign(payload, passphare);
-        return res.json({ payload, token });
+        return res.json({
+          code: 1,
+          message: 'OK',
+          payload,
+          token
+        });
       });
     })(req, res);
   },
@@ -78,39 +83,11 @@ module.exports = {
     })(req, res);
   },
   update: (req, res, next) => {
-    passport.authenticate('jwt', { session: false }, (err, user, info) => {
-      if (err) {
-        res.json({
-          code: -1,
-          message: err
-        });
-        if (info != undefined) {
-          res.json({
-            code: -1,
-            message: info.message
-          });
-        } else {
-          console.log(req.user);
-          models
-            .update(req.user)
-            .then(data => {
-              console.log(data);
-              res.status(200).json({
-                code: 1,
-                auth: true,
-                message: 'Ok'
-              });
-            })
-            .catch(err => {
-              console.log(err);
-              res.json({
-                code: -1,
-                auth: false,
-                message: 'Not ok'
-              });
-            });
-        }
-      }
+    models.update(req.body).then(data => {
+      return res.json({
+        code: 1,
+        message: 'ok'
+      });
     });
   }
 };

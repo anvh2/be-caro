@@ -10,7 +10,6 @@ require('dotenv').config();
 require('./middlewares/passport');
 var indexRouter = require('./index');
 var usersRouter = require('./components/user/interface');
-var gameRouter = require('./components/game/interface');
 
 var app = express();
 var server = require('http').Server(app);
@@ -50,7 +49,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // route setup
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
-app.use('/game', gameRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
